@@ -528,7 +528,7 @@ function setSunObjectDiameter() {
     const diameter = SUN_OBJECTS[selectedOption].diameter;
 
     const sunObjectDiameter = document.getElementById("sun-object-diameter");
-    sunObjectDiameter.innerHTML = `<b>${diameter} cm</b>`;
+    sunObjectDiameter.innerHTML = `<b>1,392,680 km</b>`;
 }
 function setSunObjectIcon() {
     const dropdown = document.getElementById("sun-objects");
@@ -545,10 +545,11 @@ function populateOutput() {
     scaleDiv.innerHTML = "";
 
     let data = computeScaledOutput();
-    const scale = `1 : ${data.scale.toLocaleString()}`;
+    const scale = `1 : 1`;
     scaleDiv.innerHTML = scale;
     data = data.data;
 
+    const dropdown = document.getElementById("sun-objects");
     for (let index = 0; index < data.length; index++) {
         if (index === 0) continue;
         let img;
@@ -556,7 +557,7 @@ function populateOutput() {
         const elemId = `output-${element.classification}`;
         const radius = formatKilometersToReadable(element.radius * 2);
         const orbitalRadius = formatKilometersToReadable(
-            element.orbital_radius / 100000
+            element.orbital_radius
         );
         const primary = element.primary.toTitleCase();
         // const diameterMM = (element.radius * 2 * 1000000).toFixed(1); // Multiplying by 1,000,000 to convert from cm to mm
@@ -582,7 +583,7 @@ function populateOutput() {
         p.appendChild(img);
 
         const span = document.createElement("span");
-        span.innerHTML = `<b>${element.name.toTitleCase()}</b> would be <span class="bg-accent/20 font-bold px-2 py-1 rounded-sm">${item}</span> with a diameter of <b>${radius}</b> at about <b>${orbitalRadius}</b> away from <i>${primary}</i>.`;
+        span.innerHTML = `<b>${element.name.toTitleCase()}</b> would be a <span class="bg-accent/20 font-bold px-2 py-1 rounded-sm">${dropdown.value}</span> with a diameter of <b>${radius}</b> at about <b>${orbitalRadius}</b> away from <i>${primary}</i>.`;
 
         p.appendChild(span);
         document.getElementById(elemId).appendChild(p);
@@ -636,11 +637,11 @@ function computeScaledOutput() {
     const data = [];
     for (let index = 0; index < CELESTIAL_BODIES.length; index++) {
         const element = CELESTIAL_BODIES[index];
-        const radius = (element.radius * scaleFactor) / 100000; // Divide by 100,000 to convert from cm to km so that we can format it nicely.
+        const radius = element.radius;
         const name = element.name;
         const classification = element.classification;
         const primary = element.primary;
-        const orbital_radius = element.orbital_radius * scaleFactor;
+        const orbital_radius = element.orbital_radius;
 
         data.push({
             name: name,
